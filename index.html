@@ -61,10 +61,11 @@
     </style>
 </head>
 <body>
-
+    <h1>Invitation Generator</h1>
+    <label for="ticketCode">Enter Ticket Code:</label>
+    <input type="text" id="ticketCode" placeholder="e.g., 22A81A6130">
+    <button onclick="generateInvitation()">Generate Invitation</button>
 <div class="invitation-container" id="contentToPrint">
-    <img src="FReShers-PARTY.pdf-_13__page-0001.jpeg" id="invitationImage" alt="Invitation Image">
-    <h1>Jithendra</h1>
 </div>
 
 <button id="create_pdf">Generate PDF</button>
@@ -109,7 +110,26 @@
             });
         }
 
-    }());
+    }())
+    function readRollNumJSON() {
+        // Replace 'rollnum.json' with the path to your JSON file
+        return fetch('rollnum.json')
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error reading rollnum.json:', error);
+            });
+    }
+
+    function generateInvitation() {
+        const ticketCode = document.getElementById('ticketCode').value;
+        const invitationContainer = document.getElementsByClassName('invitation-container')[0];
+
+        readRollNumJSON().then(rollNum => {
+            // Clear previous content
+            invitationContainer.innerHTML = `<img src="FReShers-PARTY.pdf-_13__page-0001.jpeg" id="invitationImage" alt="Invitation Image">
+            <h1>${rollNum[ticketCode]}</h1>`;
+        });
+    }
 </script>
 
 </body>
