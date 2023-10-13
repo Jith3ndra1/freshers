@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Invitation Generator</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>Invitation Generator</h1>
+    <label for="ticketCode">Enter Ticket Code:</label>
+    <input type="text" id="ticketCode" placeholder="e.g., 22A81A6130">
+    <button onclick="generateInvitation()">Generate Invitation</button>
+
+    <div id="invitationContainer" class="hidden">
+        <h2>Invitation Ticket</h2>
+        <div id="invitationContent"></div>
+        <button onclick="downloadPDF()">Download PDF</button>
+    </div>
+</div>
+
+<script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
