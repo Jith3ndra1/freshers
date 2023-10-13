@@ -3,26 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title>Invitation Generator</title>
+
+    <!-- Include jQuery, html2canvas, and jsPDF -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .invitation-container {
+            position: relative;
+            background-color: #ffffff;
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #invitationImage {
+            width: 100%; /* Make the image fill the container */
+            border-radius: 10px;
+        }
+
+        #contentToPrint {
+            position: relative;
+        }
+
+        h1 {
+            position: absolute;
+            top: 53%; /* Center the h1 vertically */
+            left: 50%; /* Center the h1 horizontally */
+            transform: translate(-50%, -50%); /* Centering trick */
+            margin: 0;
+            font-size: 50px;
+            color: #ffffff; /* Set text color to white */
+        }
+
+        #create_pdf {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Invitation Generator</h1>
-    <label for="ticketCode">Enter Ticket Code:</label>
-    <input type="text" id="ticketCode" placeholder="e.g., 22A81A6130">
-    <button onclick="generateInvitation()">Generate Invitation</button>
-
-    <div id="invitationContainer" class="hidden">
-        <h2>Invitation Ticket</h2>
-        <div id="invitationContent"></div>
-        <button onclick="downloadPDF()">Download PDF</button>
-    </div>
+<div class="invitation-container" id="contentToPrint">
+    <img src="FReShers-PARTY.pdf-_13__page-0001.jpeg" id="invitationImage" alt="Invitation Image">
+    <h1>Jithendra</h1>
 </div>
 
-<script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
-<script src="script.js"></script>
+<button id="create_pdf">Generate PDF</button>
+
+<script>
+    (function () {
+        var form = $('#contentToPrint'),
+            cache_width = form.width(),
+            a4 = [595.28, 841.89]; // for a4 size paper width and height
+
+        $('#create_pdf').on('click', function () {
+            $('body').scrollTop(0);
+            createPDF();
+        });
+
+        // create pdf
+        function createPDF() {
+            getCanvas().then(function (canvas) {
+                var img = canvas.toDataURL("image/png"),
+                    doc = new jsPDF({
+                        unit: 'px',
+                        format: 'a4'
+                    });
+                doc.addImage(img, 'JPEG', 20, 20);
+                doc.save('invitation.pdf');
+                form.width(cache_width);
+            });
+        }
+
+        // create canvas object
+        function getCanvas() {
+            form.width((a4[0] * 1.33333) - 80).css('max-width', 'none');
+            var image = document.getElementById('invitationImage');
+            return html2canvas(form, {
+                imageTimeout: 2000,
+                removeContainer: true,
+                useCORS: true, // Enable cross-origin image loading
+                onclone: function (clonedDoc) {
+                    var clonedImage = clonedDoc.getElementById('invitationImage');
+                    clonedImage.src = image.src; // Set the source to the original image
+                }
+            });
+        }
+
+    }());
+</script>
 
 </body>
 </html>
